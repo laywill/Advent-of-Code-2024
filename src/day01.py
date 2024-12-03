@@ -1,4 +1,5 @@
 import pathlib
+from collections import Counter
 
 def read_input(day_number):
     """
@@ -52,16 +53,24 @@ def solve_part1(input_data):
 
 def solve_part2(input_data):
     """
-    Solve Part 2 of the puzzle (placeholder).
+    Solve Part 2 of the puzzle.
     
     Args:
         input_data (tuple): Tuple of two lists of integers
     
     Returns:
-        Result of Part 2 solution
+        int: Similarity score
     """
-    # Placeholder for Part 2
-    return None
+    # Unpack the input data
+    left_list, right_list = input_data
+    
+    # Count occurrences of numbers in the right list
+    right_counter = Counter(right_list)
+    
+    # Calculate similarity score
+    similarity_score = sum(num * right_counter[num] for num in left_list)
+    
+    return similarity_score
 
 def main():
     # Automatically extract day number from filename
@@ -76,8 +85,7 @@ def main():
     
     # Solve Part 2
     part2_solution = solve_part2(input_data)
-    if part2_solution is not None:
-        print(f"Day {day_number} - Part 2 Solution: {part2_solution}")
+    print(f"Day {day_number} - Part 2 Solution: {part2_solution}")
 
 if __name__ == '__main__':
     main()
