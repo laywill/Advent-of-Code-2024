@@ -1,0 +1,76 @@
+name: Advent of Code Solutions
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  solve-puzzles:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Run All Day Solutions
+      run: |
+        mkdir -p results
+        
+        # Loop through all day solutions
+        for day_script in src/day*.py; do
+          if [ -f "$day_script" ]; then
+            day=$(basename "$day_script" .py)
+            echo "Running $day_script"
+            python "$day_script" > "results/${day}_output.txt" 2>&1
+          fi
+        done
+    
+    - name: Upload Results Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: aoc-solutions
+        path: results/
+        retention-days: 90
+    
+    - name: Display Results
+      run: |
+        echo "=== Puzzle Solutions ==="
+        for result in results/*.txt; do
+          if [ -f "$result" ]; then
+            echo ""
+            echo "### $(basename "$result")"
+            cat "$result"
+          fi
+        done
+
+  # Optional: Add a linting and testing job
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+    
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 src --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings
+        flake8 src --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
