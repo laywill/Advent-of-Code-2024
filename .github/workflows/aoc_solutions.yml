@@ -1,0 +1,54 @@
+name: Advent of Code Solutions
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  solve-puzzles:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Run All Day Solutions
+      run: |
+        # Loop through all day solutions
+        for day_script in src/day*.py; do
+          if [ -f "$day_script" ]; then
+            day=$(basename "$day_script" .py)
+            echo "=== Running $day ==="
+            python "$day_script"
+            echo ""  # Add a blank line between solutions
+          fi
+        done
+
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+    
+    - name: Lint with flake8
+      run: |
+        flake8 src --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 src --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
