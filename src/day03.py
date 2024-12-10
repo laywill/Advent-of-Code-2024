@@ -47,16 +47,55 @@ def solve_part1(input_data):
 
 def solve_part2(input_data):
     """
-    Solve Part 2 of the puzzle.
+    Solve Part 2 of the puzzle with do() and don't() instructions.
     
     Args:
         input_data (str): Corrupted memory string
     
     Returns:
-        Result of Part 2 solution
+        int: Sum of multiplication results from enabled mul instructions
     """
-    # Placeholder for Part 2 if additional requirements are specified
-    return "Not implemented yet"
+    # Regex patterns
+    mul_pattern = r'mul\s*\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)'
+    do_pattern = r'do\s*\(\s*\)'
+    dont_pattern = r'don\'?t\s*\(\s*\)'
+    
+    # Track mul instruction state
+    mul_enabled = True
+    results = []
+    
+    # Scan through the input tracking state changes and mul instructions
+    pos = 0
+    while pos < len(input_data):
+        # Check for do() instruction
+        do_match = re.search(do_pattern, input_data[pos:])
+        if do_match:
+            mul_enabled = True
+            pos += do_match.end()
+            continue
+        
+        # Check for don't() instruction
+        dont_match = re.search(dont_pattern, input_data[pos:])
+        if dont_match:
+            mul_enabled = False
+            pos += dont_match.end()
+            continue
+        
+        # Check for mul instruction
+        mul_match = re.search(mul_pattern, input_data[pos:])
+        if mul_match:
+            if mul_enabled:
+                x = int(mul_match.group(1))
+                y = int(mul_match.group(2))
+                results.append(x * y)
+            pos += mul_match.end()
+            continue
+        
+        # Move forward if no match found
+        pos += 1
+    
+    # Return the sum of multiplication results
+    return sum(results)
 
 def main():
     # Automatically extract day number from filename
