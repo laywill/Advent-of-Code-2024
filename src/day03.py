@@ -29,15 +29,17 @@ def solve_part1(input_data):
     Returns:
         int: Sum of all multiplication results
     """
+    # Join all lines into one string
+    combined_input = ''.join(input_data)
+    
     pattern = r'mul\((\d{1,3}),(\d{1,3})\)'
     total_sum = 0
     
-    for line in input_data:
-        matches = re.finditer(pattern, line)
-        for match in matches:
-            x = int(match.group(1))
-            y = int(match.group(2))
-            total_sum += x * y
+    matches = re.finditer(pattern, combined_input)
+    for match in matches:
+        x = int(match.group(1))
+        y = int(match.group(2))
+        total_sum += x * y
             
     return total_sum
 
@@ -52,53 +54,54 @@ def solve_part2(input_data):
     Returns:
         int: Sum of all enabled multiplication results
     """
+    # Join all lines into one string
+    combined_input = ''.join(input_data)
+    
     # Patterns for different instructions
     mul_pattern = r'mul\((\d{1,3}),(\d{1,3})\)'
     do_pattern = r'do\(\)'
     dont_pattern = r'don\'t\(\)'
     
-    total_sum = 0
+    # Find all instructions with their positions
+    instructions = []
     
-    for line in input_data:
-        # Find all instructions with their positions
-        instructions = []
+    # Find multiplication instructions
+    for match in re.finditer(mul_pattern, combined_input):
+        instructions.append({
+            'type': 'mul',
+            'pos': match.start(),
+            'x': int(match.group(1)),
+            'y': int(match.group(2))
+        })
+    
+    # Find do() instructions
+    for match in re.finditer(do_pattern, combined_input):
+        instructions.append({
+            'type': 'do',
+            'pos': match.start()
+        })
         
-        # Find multiplication instructions
-        for match in re.finditer(mul_pattern, line):
-            instructions.append({
-                'type': 'mul',
-                'pos': match.start(),
-                'x': int(match.group(1)),
-                'y': int(match.group(2))
-            })
-        
-        # Find do() instructions
-        for match in re.finditer(do_pattern, line):
-            instructions.append({
-                'type': 'do',
-                'pos': match.start()
-            })
-            
-        # Find don't() instructions
-        for match in re.finditer(dont_pattern, line):
-            instructions.append({
-                'type': 'dont',
-                'pos': match.start()
-            })
-        
-        # Sort instructions by position
-        instructions.sort(key=lambda x: x['pos'])
-        
-        # Process instructions in order
-        enabled = True  # Multiplications are enabled by default
-        
-        for instruction in instructions:
-            if instruction['type'] == 'do':
-                enabled = True
-            elif instruction['type'] == 'dont':
-                enabled = False
-            elif instruction['type'] == 'mul' and enabled:
-                total_sum += instruction['x'] * instruction['y']
+    # Find don't() instructions
+    for match in re.finditer(dont_pattern, combined_input):
+        instructions.append({
+            'type': 'dont',
+            'pos': match.start()
+        })
+    
+    # Sort instructions by position
+    instructions.sort(key=lambda x: x['pos'])
+    
+    # Process instructions in order
+    total_sum = 0
+    enabled = True  # Multiplications are enabled by default
+    
+    for instruction in instructions:
+        if instruction['type'] == 'do':
+            enabled = True
+        elif instruction['type'] == 'dont':
+            enabled = False
+        elif instruction['type'] == 'mul' and enabled:
+            total_sum += instruction['x'] * instruction['y']
     
     return total_sum
 
