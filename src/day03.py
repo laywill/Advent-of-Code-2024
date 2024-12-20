@@ -23,50 +23,84 @@ def solve_part1(input_data):
     """
     Find all valid mul(X,Y) instructions and sum their products.
     
-    A valid instruction must:
-    - Match exactly mul(X,Y) format
-    - Have X and Y be 1-3 digit numbers
-    
     Args:
         input_data (list): Lines of corrupted memory
     
     Returns:
         int: Sum of all multiplication results
     """
-    # Regex pattern for valid mul instructions
-    # Matches: mul(X,Y) where X and Y are 1-3 digits
     pattern = r'mul\((\d{1,3}),(\d{1,3})\)'
-    
     total_sum = 0
     
-    # Process each line of input
     for line in input_data:
-        # Find all valid mul instructions in the line
         matches = re.finditer(pattern, line)
-        
-        # Process each match
         for match in matches:
-            # Extract the numbers
             x = int(match.group(1))
             y = int(match.group(2))
-            
-            # Multiply and add to total
-            product = x * y
-            total_sum += product
+            total_sum += x * y
             
     return total_sum
 
 def solve_part2(input_data):
     """
-    Placeholder for Part 2 solution.
+    Find all valid mul(X,Y) instructions and sum their products,
+    taking into account do() and don't() instructions.
     
     Args:
-        input_data (list): Processed input data
+        input_data (list): Lines of corrupted memory
     
     Returns:
-        None
+        int: Sum of all enabled multiplication results
     """
-    return None
+    # Patterns for different instructions
+    mul_pattern = r'mul\((\d{1,3}),(\d{1,3})\)'
+    do_pattern = r'do\(\)'
+    dont_pattern = r'don\'t\(\)'
+    
+    total_sum = 0
+    
+    for line in input_data:
+        # Find all instructions with their positions
+        instructions = []
+        
+        # Find multiplication instructions
+        for match in re.finditer(mul_pattern, line):
+            instructions.append({
+                'type': 'mul',
+                'pos': match.start(),
+                'x': int(match.group(1)),
+                'y': int(match.group(2))
+            })
+        
+        # Find do() instructions
+        for match in re.finditer(do_pattern, line):
+            instructions.append({
+                'type': 'do',
+                'pos': match.start()
+            })
+            
+        # Find don't() instructions
+        for match in re.finditer(dont_pattern, line):
+            instructions.append({
+                'type': 'dont',
+                'pos': match.start()
+            })
+        
+        # Sort instructions by position
+        instructions.sort(key=lambda x: x['pos'])
+        
+        # Process instructions in order
+        enabled = True  # Multiplications are enabled by default
+        
+        for instruction in instructions:
+            if instruction['type'] == 'do':
+                enabled = True
+            elif instruction['type'] == 'dont':
+                enabled = False
+            elif instruction['type'] == 'mul' and enabled:
+                total_sum += instruction['x'] * instruction['y']
+    
+    return total_sum
 
 def main():
     # Get day number from filename
