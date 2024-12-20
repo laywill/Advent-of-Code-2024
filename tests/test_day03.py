@@ -40,12 +40,13 @@ def test_multiple_lines():
     ]
     
     # Part 1: All valid multiplications should be counted
+    # 2*4 + 3*3 + 5*5 + 2*2 = 8 + 9 + 25 + 4 = 46
     part1_result = solve_part1(test_input)
-    assert part1_result == 47, f"Part 1: Expected 47, but got {part1_result}"  # (2*4 + 3*3 + 5*5 + 2*2)
+    assert part1_result == 46, f"Part 1: Expected 46, but got {part1_result}"
     
     # Part 2: All multiplications should be counted (no do/don't instructions)
     part2_result = solve_part2(test_input)
-    assert part2_result == 47, f"Part 2: Expected 47, but got {part2_result}"
+    assert part2_result == 46, f"Part 2: Expected 46, but got {part2_result}"
 
 def test_empty_input():
     """
