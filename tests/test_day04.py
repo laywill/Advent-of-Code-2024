@@ -19,6 +19,22 @@ def test_part1_example():
     ]
     assert solve_part1(example_input) == 18
 
+def test_part1_dotted_example():
+    """Test Part 1 with the example where non-XMAS letters are replaced with dots"""
+    example_input = [
+        "....XXMAS.",
+        ".SAMXMS...",
+        "...S..A...",
+        "..A.A.MS.X",
+        "XMASAMX.MM",
+        "X.....XA.A",
+        "S.S.S.S.SS",
+        ".A.A.A.A.A",
+        "..M.M.M.MM",
+        ".X.X.XMASX"
+    ]
+    assert solve_part1(example_input) == 18
+
 def test_part2_example():
     """Test Part 2 with the example from the puzzle description"""
     example_input = [
@@ -32,6 +48,22 @@ def test_part2_example():
         "SAXAMASAAA",
         "MAMMMXMMMM",
         "MXMXAXMASX"
+    ]
+    assert solve_part2(example_input) == 9
+
+def test_part2_dotted_example():
+    """Test Part 2 with the example where non-X-MAS letters are replaced with dots"""
+    example_input = [
+        ".M.S......",
+        "..A..MSMS.",
+        ".M.S.MAA..",
+        "..A.ASMSM.",
+        ".M.S.M....",
+        "..........",
+        "S.S.S.S.S.",
+        ".A.A.A.A..",
+        "M.M.M.M.M.",
+        ".........."
     ]
     assert solve_part2(example_input) == 9
 
