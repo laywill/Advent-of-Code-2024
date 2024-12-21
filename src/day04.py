@@ -46,6 +46,52 @@ def check_direction(grid, row, col, dr, dc, target="XMAS"):
             return False
     return True
 
+def check_mas_direction(grid, row, col, dr, dc):
+    """
+    Check if "MAS" exists starting from a position in a given direction.
+    Also checks for "SAM" in the same direction.
+    
+    Args:
+        grid (list): The word search grid
+        row (int): Starting row
+        col (int): Starting column
+        dr (int): Row direction (-1, 0, or 1)
+        dc (int): Column direction (-1, 0, or 1)
+    
+    Returns:
+        bool: True if either "MAS" or "SAM" is found in this direction
+    """
+    return check_direction(grid, row, col, dr, dc, "MAS") or check_direction(grid, row, col, dr, dc, "SAM")
+
+def check_x_mas(grid, center_row, center_col):
+    """
+    Check if there's a valid X-MAS pattern centered at the given position.
+    An X-MAS pattern consists of two "MAS" strings (or "SAM") forming an X.
+    
+    Args:
+        grid (list): The word search grid
+        center_row (int): Row of the center of the X
+        center_col (int): Column of the center of the X
+    
+    Returns:
+        bool: True if a valid X-MAS pattern is found
+    """
+    # Check all four possible combinations of diagonal MAS patterns
+    diagonal_pairs = [
+        # Upper-left to lower-right AND upper-right to lower-left
+        [(-1, -1, 1, 1), (-1, 1, 1, -1)],
+        # Lower-right to upper-left AND lower-left to upper-right
+        [(1, 1, -1, -1), (1, -1, -1, 1)]
+    ]
+    
+    for dr1, dc1, dr2, dc2 in diagonal_pairs:
+        # Check if we can find MAS (or SAM) in both diagonals
+        if check_mas_direction(grid, center_row, center_col, dr1, dc1) and \
+           check_mas_direction(grid, center_row, center_col, dr2, dc2):
+            return True
+            
+    return False
+
 def solve_part1(input_data):
     """
     Solve Part 1 of the puzzle.
@@ -61,7 +107,7 @@ def solve_part1(input_data):
     width = len(grid[0])
     count = 0
     
-    # Define all eight directions: horizontal, vertical, and diagonal
+    # Define all eight directions
     directions = [
         (-1, -1), (-1, 0), (-1, 1),  # Up-left, Up, Up-right
         (0, -1),           (0, 1),    # Left, Right
@@ -83,13 +129,24 @@ def solve_part2(input_data):
     Solve Part 2 of the puzzle.
     
     Args:
-        input_data (list): Processed input data
+        input_data (list): List of strings representing the word search grid
     
     Returns:
-        Result of Part 2 solution
+        int: Total number of X-MAS patterns found
     """
-    # Part 2 not yet revealed
-    pass
+    grid = input_data
+    height = len(grid)
+    width = len(grid[0])
+    count = 0
+    
+    # Check every possible center position for an X pattern
+    # We need at least 2 spaces in each direction for a complete X-MAS
+    for row in range(1, height - 1):
+        for col in range(1, width - 1):
+            if check_x_mas(grid, row, col):
+                count += 1
+    
+    return count
 
 def main():
     # Automatically extract day number from filename
