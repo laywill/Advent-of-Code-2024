@@ -67,12 +67,72 @@ def test_part2_dotted_example():
     ]
     assert solve_part2(example_input) == 9
 
-def test_part2_simple_example():
-    """Test Part 2 with the simple X-MAS example from the puzzle description"""
+def test_part2_simple_ms_on_left():
+    """Test Part 2 with simple X-MAS pattern - Ms on left"""
     example_input = [
         "M.S",
         ".A.",
         "M.S"
     ]
-    # The puzzle mentions this pattern has 6 valid permutations
-    assert solve_part2(example_input) == 6
+    assert solve_part2(example_input) == 1
+
+def test_part2_simple_ms_on_top():
+    """Test Part 2 with simple X-MAS pattern - Ms on top"""
+    example_input = [
+        "M.M",
+        ".A.",
+        "S.S"
+    ]
+    assert solve_part2(example_input) == 1
+
+def test_part2_simple_ms_on_bottom():
+    """Test Part 2 with simple X-MAS pattern - Ms on bottom"""
+    example_input = [
+        "S.S",
+        ".A.",
+        "M.M"
+    ]
+    assert solve_part2(example_input) == 1
+
+def test_part2_simple_ms_on_right():
+    """Test Part 2 with simple X-MAS pattern - Ms on right"""
+    example_input = [
+        "S.M",
+        ".A.",
+        "S.M"
+    ]
+    assert solve_part2(example_input) == 1
+
+def test_part2_simple_ms_top_left_bottom_right():
+    """Test Part 2 with simple X-MAS pattern - Ms on top-left and bottom-right"""
+    example_input = [
+        "M.S",
+        ".A.",
+        "S.M"
+    ]
+    assert solve_part2(example_input) == 1
+
+def test_part2_simple_ms_top_right_bottom_left():
+    """Test Part 2 with simple X-MAS pattern - Ms on top-right and bottom-left"""
+    example_input = [
+        "S.M",
+        ".A.",
+        "M.S"
+    ]
+    assert solve_part2(example_input) == 1
+
+def test_part2_all_patterns_should_total_six():
+    """Test that running part2 on all valid patterns gives us 6 total"""
+    # Create all six test patterns
+    patterns = [
+        ["M.S", ".A.", "M.S"],  # Ms on left
+        ["M.M", ".A.", "S.S"],  # Ms on top
+        ["S.S", ".A.", "M.M"],  # Ms on bottom
+        ["S.M", ".A.", "S.M"],  # Ms on right
+        ["M.S", ".A.", "S.M"],  # Ms top-left and bottom-right
+        ["S.M", ".A.", "M.S"]   # Ms top-right and bottom-left
+    ]
+    
+    # Each pattern should find exactly one X-MAS
+    total = sum(solve_part2(pattern) for pattern in patterns)
+    assert total == 6
