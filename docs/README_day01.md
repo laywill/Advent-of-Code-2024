@@ -92,48 +92,45 @@ The Prompt:
 
 The LLM is surprisingly on it, with context drawn from earlier prompts, noting e.g. about Paet 2 coming later.
 
-```
- I'll help you solve Day 1, Part 1. Based on the problem description, we need to:
-1. Read two lists of numbers from the input file
-2. Sort both lists
-3. Calculate the distance between paired numbers
-4. Sum these distances
-
-Here's a solution:
-
-...
-
-Key points about the solution:
-
-1. `read_input()` function:
-   - Reads the input file
-   - Converts each line to two integers
-   - Creates separate lists for left and right numbers
-
-2. `solve_part1()` function:
-   - Sorts both input lists
-   - Uses `zip()` to pair sorted lists
-   - Calculates absolute difference between paired numbers
-   - Sums these differences
-
-3. Follows the template from our previous discussion
-4. Handles the problem's requirements:
-   - Sorts lists independently
-   - Pairs smallest with smallest, etc.
-   - Calculates distance between each pair
-   - Sums total distance
-
-The code will:
-- Read input from `inputs/day01.txt`
-- Sort the lists
-- Calculate the total distance
-- Print the solution
-
-Note: Part 2 is left as a placeholder, as we haven't seen its requirements yet.
-
-Would you like me to explain any part of the solution in more detail?
-```
-
+> I'll help you solve Day 1, Part 1. Based on the problem description, we need to:
+> 1. Read two lists of numbers from the input file
+> 2. Sort both lists
+> 3. Calculate the distance between paired numbers
+> 4. Sum these distances
+> 
+> Here's a solution:
+> 
+> ...
+> 
+> Key points about the solution:
+> 
+> 1. `read_input()` function:
+>    - Reads the input file
+>    - Converts each line to two integers
+>    - Creates separate lists for left and right numbers
+> 
+> 2. `solve_part1()` function:
+>    - Sorts both input lists
+>    - Uses `zip()` to pair sorted lists
+>    - Calculates absolute difference between paired numbers
+>    - Sums these differences
+> 
+> 3. Follows the template from our previous discussion
+> 4. Handles the problem's requirements:
+>    - Sorts lists independently
+>    - Pairs smallest with smallest, etc.
+>    - Calculates distance between each pair
+>    - Sums total distance
+> 
+> The code will:
+> - Read input from `inputs/day01.txt`
+> - Sort the lists
+> - Calculate the total distance
+> - Print the solution
+> 
+> Note: Part 2 is left as a placeholder, as we haven't seen its requirements yet.
+> 
+> Would you like me to explain any part of the solution in more detail?
 
 I copy-pasted the code, into a new file named as directed during the day00 template setup activity, using the GitHub app.
 
@@ -180,36 +177,33 @@ I got lazy and decided to throw it a more open ended Prompt.
 
 The response is again, generally excellent, with clear explanations, commented code, and cocognicence drawn from earlier prompts.
 
-
-```
-  I'll modify the existing solution to add Part 2 functionality:
-
-...
-
-Key changes for Part 2:
-
-1. Imported `Counter` from `collections` to easily count occurrences
-
-2. Updated `solve_part2()` function:
-   - Uses `Counter` to count occurrences of numbers in the right list
-   - Calculates similarity score by:
-     * Iterating through left list numbers
-     * Multiplying each number by its count in the right list
-     * Summing these products
-
-The solution follows the problem description exactly:
-- Count how many times each left list number appears in the right list
-- Multiply each left list number by its count
-- Sum these products to get the similarity score
-
-The code will:
-- Read the same input from `inputs/day01.txt`
-- Solve Part 1 as before
-- Calculate the similarity score for Part 2
-- Print both solutions
-
-Would you like me to explain any part of the solution in more detail?
-```
+> I'll modify the existing solution to add Part 2 functionality:
+> 
+> ...
+> 
+> Key changes for Part 2:
+> 
+> 1. Imported `Counter` from `collections` to easily count occurrences
+> 
+> 2. Updated `solve_part2()` function:
+>    - Uses `Counter` to count occurrences of numbers in the right list
+>    - Calculates similarity score by:
+>      * Iterating through left list numbers
+>      * Multiplying each number by its count in the right list
+>      * Summing these products
+> 
+> The solution follows the problem description exactly:
+> - Count how many times each left list number appears in the right list
+> - Multiply each left list number by its count
+> - Sum these products to get the similarity score
+> 
+> The code will:
+> - Read the same input from `inputs/day01.txt`
+> - Solve Part 1 as before
+> - Calculate the similarity score for Part 2
+> - Print both solutions
+> 
+> Would you like me to explain any part of the solution in more detail?
 
 Again, bugger me if it wasn't right first time!
 
