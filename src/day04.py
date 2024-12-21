@@ -76,20 +76,18 @@ def check_x_mas(grid, center_row, center_col):
     Returns:
         bool: True if a valid X-MAS pattern is found
     """
-    # Check all four possible combinations of diagonal MAS patterns
+    # Define the diagonal directions for both arms of the X
     diagonal_pairs = [
-        # Upper-left to lower-right AND upper-right to lower-left
-        [(-1, -1, 1, 1), (-1, 1, 1, -1)],
-        # Lower-right to upper-left AND lower-left to upper-right
-        [(1, 1, -1, -1), (1, -1, -1, 1)]
+        ((-1, -1), (1, 1)),   # Top-left to bottom-right
+        ((-1, 1), (1, -1)),   # Top-right to bottom-left
     ]
     
-    for dr1, dc1, dr2, dc2 in diagonal_pairs:
-        # Check if we can find MAS (or SAM) in both diagonals
+    for (dr1, dc1), (dr2, dc2) in diagonal_pairs:
+        # Check first diagonal from center upward and downward
         if check_mas_direction(grid, center_row, center_col, dr1, dc1) and \
            check_mas_direction(grid, center_row, center_col, dr2, dc2):
             return True
-            
+    
     return False
 
 def solve_part1(input_data):
