@@ -66,7 +66,7 @@ def check_mas_direction(grid, row, col, dr, dc):
 def check_x_mas(grid, center_row, center_col):
     """
     Check if there's a valid X-MAS pattern centered at the given position.
-    An X-MAS pattern consists of two "MAS" strings (or "SAM") forming an X.
+    An X-MAS pattern consists of two "MAS" strings (or "SAM") in opposite directions.
     
     Args:
         grid (list): The word search grid
@@ -76,14 +76,16 @@ def check_x_mas(grid, center_row, center_col):
     Returns:
         bool: True if a valid X-MAS pattern is found
     """
-    # Define the diagonal directions for both arms of the X
-    diagonal_pairs = [
-        ((-1, -1), (1, 1)),   # Top-left to bottom-right
-        ((-1, 1), (1, -1)),   # Top-right to bottom-left
+    # Define the four cardinal direction pairs (each pair represents opposite directions)
+    direction_pairs = [
+        # Vertical: top and bottom
+        ((-1, 0), (1, 0)),
+        # Horizontal: left and right
+        ((0, -1), (0, 1)),
     ]
     
-    for (dr1, dc1), (dr2, dc2) in diagonal_pairs:
-        # Check first diagonal from center upward and downward
+    for (dr1, dc1), (dr2, dc2) in direction_pairs:
+        # Check both directions from the center
         if check_mas_direction(grid, center_row, center_col, dr1, dc1) and \
            check_mas_direction(grid, center_row, center_col, dr2, dc2):
             return True
