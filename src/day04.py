@@ -41,32 +41,15 @@ def check_direction(grid, row, col, dr, dc, target="XMAS"):
     ):
         return False
     
+    word = ""
     for i in range(len(target)):
-        if grid[row + dr * i][col + dc * i] != target[i]:
-            return False
-    return True
-
-def check_mas_direction(grid, row, col, dr, dc):
-    """
-    Check if "MAS" exists starting from a position in a given direction.
-    Also checks for "SAM" in the same direction.
-    
-    Args:
-        grid (list): The word search grid
-        row (int): Starting row
-        col (int): Starting column
-        dr (int): Row direction (-1, 0, or 1)
-        dc (int): Column direction (-1, 0, or 1)
-    
-    Returns:
-        bool: True if either "MAS" or "SAM" is found in this direction
-    """
-    return check_direction(grid, row, col, dr, dc, "MAS") or check_direction(grid, row, col, dr, dc, "SAM")
+        word += grid[row + dr * i][col + dc * i]
+    return word == target
 
 def check_x_mas(grid, center_row, center_col):
     """
     Check if there's a valid X-MAS pattern centered at the given position.
-    An X-MAS pattern consists of two "MAS" strings (or "SAM") in opposite directions.
+    A valid pattern requires finding "MAS" or "SAM" on both diagonals through the center point.
     
     Args:
         grid (list): The word search grid
@@ -76,21 +59,41 @@ def check_x_mas(grid, center_row, center_col):
     Returns:
         bool: True if a valid X-MAS pattern is found
     """
-    # Define the four cardinal direction pairs (each pair represents opposite directions)
-    direction_pairs = [
-        # Vertical: top and bottom
-        ((-1, 0), (1, 0)),
-        # Horizontal: left and right
-        ((0, -1), (0, 1)),
-    ]
-    
-    for (dr1, dc1), (dr2, dc2) in direction_pairs:
-        # Check both directions from the center
-        if check_mas_direction(grid, center_row, center_col, dr1, dc1) and \
-           check_mas_direction(grid, center_row, center_col, dr2, dc2):
-            return True
-    
-    return False
+    # Get the strings along both diagonals from the center point
+    def get_diagonal_strings(row, col):
+        """Helper function to get all possible 3-letter strings along a diagonal"""
+        strings = []
+        # Try both directions from the center for the diagonal
+        for dr, dc in [(1, 1), (-1, -1)]:  # One diagonal
+            if (row + 2*dr >= 0 and row + 2*dr < len(grid) and 
+                col + 2*dc >= 0 and col + 2*dc < len(grid[0])):
+                word = (grid[row][col] + 
+                       grid[row + dr][col + dc] + 
+                       grid[row + 2*dr][col + 2*dc])
+                strings.append(word)
+        return strings
+
+    def get_other_diagonal_strings(row, col):
+        """Helper function to get all possible 3-letter strings along the other diagonal"""
+        strings = []
+        # Try both directions from the center for the other diagonal
+        for dr, dc in [(1, -1), (-1, 1)]:  # Other diagonal
+            if (row + 2*dr >= 0 and row + 2*dr < len(grid) and 
+                col + 2*dc >= 0 and col + 2*dc < len(grid[0])):
+                word = (grid[row][col] + 
+                       grid[row + dr][col + dc] + 
+                       grid[row + 2*dr][col + 2*dc])
+                strings.append(word)
+        return strings
+
+    # Get all possible strings on both diagonals
+    diag1_strings = get_diagonal_strings(center_row, center_col)
+    diag2_strings = get_other_diagonal_strings(center_row, center_col)
+
+    # Check if we can find MAS or SAM on both diagonals
+    valid_strings = {"MAS", "SAM"}
+    return (any(s in valid_strings for s in diag1_strings) and 
+            any(s in valid_strings for s in diag2_strings))
 
 def solve_part1(input_data):
     """
@@ -140,7 +143,6 @@ def solve_part2(input_data):
     count = 0
     
     # Check every possible center position for an X pattern
-    # We need at least 2 spaces in each direction for a complete X-MAS
     for row in range(1, height - 1):
         for col in range(1, width - 1):
             if check_x_mas(grid, row, col):
