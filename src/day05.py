@@ -2,6 +2,7 @@
 
 import pathlib
 from typing import List, Dict, Set, Tuple
+from collections import defaultdict, deque
 
 def read_input(day_number: int) -> Tuple[List[Tuple[int, int]], List[List[int]]]:
     """
@@ -99,6 +100,68 @@ def solve_part1(input_data: Tuple[List[Tuple[int, int]], List[List[int]]]) -> in
     
     return middle_sum
 
+def build_graph(pages: List[int], rules: List[Tuple[int, int]]) -> Tuple[Dict[int, Set[int]], Dict[int, int]]:
+    """
+    Build a directed graph and count incoming edges for the given pages and rules.
+    
+    Args:
+        pages (List[int]): List of pages to include in the graph
+        rules (List[Tuple[int, int]]): List of ordering rules
+    
+    Returns:
+        Tuple containing:
+        - Dictionary mapping each page to its neighbors
+        - Dictionary mapping each page to its incoming edge count
+    """
+    # Create adjacency list representation
+    graph = defaultdict(set)
+    in_degree = defaultdict(int)
+    page_set = set(pages)
+    
+    # Initialize in_degree for all pages
+    for page in pages:
+        in_degree[page] = 0
+    
+    # Build graph using only rules that apply to the given pages
+    for before, after in rules:
+        if before in page_set and after in page_set:
+            graph[before].add(after)
+            in_degree[after] += 1
+    
+    return graph, in_degree
+
+def topological_sort(pages: List[int], rules: List[Tuple[int, int]]) -> List[int]:
+    """
+    Perform topological sort on the pages using Kahn's algorithm.
+    
+    Args:
+        pages (List[int]): List of pages to sort
+        rules (List[Tuple[int, int]]): List of ordering rules
+    
+    Returns:
+        List[int]: Pages in topologically sorted order
+    """
+    # Build the graph
+    graph, in_degree = build_graph(pages, rules)
+    
+    # Initialize queue with nodes that have no incoming edges
+    queue = deque([page for page in pages if in_degree[page] == 0])
+    result = []
+    
+    # Process queue
+    while queue:
+        # Get node with no incoming edges
+        current = queue.popleft()
+        result.append(current)
+        
+        # Remove edges from current node
+        for neighbor in graph[current]:
+            in_degree[neighbor] -= 1
+            if in_degree[neighbor] == 0:
+                queue.append(neighbor)
+    
+    return result
+
 def solve_part2(input_data: Tuple[List[Tuple[int, int]], List[List[int]]]) -> int:
     """
     Solve Part 2 of the puzzle.
@@ -107,10 +170,20 @@ def solve_part2(input_data: Tuple[List[Tuple[int, int]], List[List[int]]]) -> in
         input_data: Tuple containing rules and updates
     
     Returns:
-        Result of Part 2 solution
+        Sum of middle page numbers from corrected invalid updates
     """
-    # Implement Part 2 solution here
-    pass
+    rules, updates = input_data
+    middle_sum = 0
+    
+    for update in updates:
+        # Only process invalid updates
+        if not is_valid_order(update, rules):
+            # Sort the pages according to rules
+            sorted_pages = topological_sort(update, rules)
+            # Add the middle page to the sum
+            middle_sum += get_middle_page(sorted_pages)
+    
+    return middle_sum
 
 def main():
     # Automatically extract day number from filename
