@@ -35,20 +35,34 @@ def check_direction(grid, row, col, dr, dc, target="XMAS"):
     return match
 
 def get_diagonal_string(grid, row, col, dr, dc):
-    """Get a 3-letter string along a diagonal direction."""
+    """
+    Get a 3-letter string along a diagonal direction, centered on the given position.
+    
+    Args:
+        grid (list): The word search grid
+        row (int): Center row
+        col (int): Center column
+        dr (int): Row direction (-1 or 1)
+        dc (int): Column direction (-1 or 1)
+    
+    Returns:
+        str: The 3-letter string found along the diagonal, or None if out of bounds
+    """
     print(f"\nTrying diagonal from ({row},{col}) with direction ({dr},{dc})")
     
-    # Check if we can get a 3-letter string in this direction
-    if (row + 2*dr < 0 or row + 2*dr >= len(grid) or 
-        col + 2*dc < 0 or col + 2*dc >= len(grid[0])):
-        print(f"  Out of bounds at ({row + 2*dr},{col + 2*dc})")
+    # Check if we can get a 3-letter string centered on this position
+    if (row - abs(dr) < 0 or row + abs(dr) >= len(grid) or 
+        col - abs(dc) < 0 or col + abs(dc) >= len(grid[0])):
+        print(f"  Out of bounds! Grid size: {len(grid)}x{len(grid[0])}")
+        print(f"  Would need positions: ({row - abs(dr)},{col - abs(dc)}) to ({row + abs(dr)},{col + abs(dc)})")
         return None
     
-    # Build the 3-letter string
-    string = (grid[row][col] + 
-            grid[row + dr][col + dc] + 
-            grid[row + 2*dr][col + 2*dc])
+    # Build the 3-letter string centered on the current position
+    string = (grid[row - dr][col - dc] + 
+             grid[row][col] + 
+             grid[row + dr][col + dc])
     print(f"  Found string: {string}")
+    print(f"    from: ({row - dr},{col - dc}) -> ({row},{col}) -> ({row + dr},{col + dc})")
     return string
 
 def check_x_mas(grid, center_row, center_col):
