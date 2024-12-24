@@ -10,9 +10,32 @@ def read_input(day_number):
     with open(input_path, 'r') as f:
         return [line.strip() for line in f.readlines()]
 
+def check_direction(grid, row, col, dr, dc, target="XMAS"):
+    """Check if target string exists starting from a position in a given direction."""
+    print(f"\nChecking direction from ({row},{col}) with direction ({dr},{dc}) for target '{target}'")
+    
+    # Check boundaries
+    if (row + dr * (len(target) - 1) < 0 or 
+        row + dr * (len(target) - 1) >= len(grid) or
+        col + dc * (len(target) - 1) < 0 or 
+        col + dc * (len(target) - 1) >= len(grid[0])):
+        print(f"  Out of bounds: would end at ({row + dr * (len(target) - 1)},{col + dc * (len(target) - 1)})")
+        return False
+    
+    # Build the word
+    word = ""
+    for i in range(len(target)):
+        current_row = row + dr * i
+        current_col = col + dc * i
+        word += grid[current_row][current_col]
+        print(f"  Position ({current_row},{current_col}): added '{grid[current_row][current_col]}' -> word so far: '{word}'")
+    
+    match = word == target
+    print(f"  Found word: '{word}' -> {'matches' if match else 'does not match'} target '{target}'")
+    return match
+
 def get_diagonal_string(grid, row, col, dr, dc):
     """Get a 3-letter string along a diagonal direction."""
-    # Debug output
     print(f"\nTrying diagonal from ({row},{col}) with direction ({dr},{dc})")
     
     # Check if we can get a 3-letter string in this direction
@@ -72,6 +95,11 @@ def check_x_mas(grid, center_row, center_col):
 
 def solve_part1(input_data):
     """Solve Part 1: Find all instances of XMAS in any direction."""
+    print("\nSolving Part 1")
+    print("Input grid:")
+    for row in input_data:
+        print(row)
+    
     grid = input_data
     height = len(grid)
     width = len(grid[0])
@@ -83,12 +111,16 @@ def solve_part1(input_data):
         (1, -1),  (1, 0),  (1, 1)
     ]
     
+    print(f"\nChecking grid positions (height={height}, width={width})")
     for row in range(height):
         for col in range(width):
+            print(f"\n=== Checking position ({row},{col}) ===")
             for dr, dc in directions:
                 if check_direction(grid, row, col, dr, dc, "XMAS"):
+                    print(f"Found XMAS at ({row},{col}) in direction ({dr},{dc})")
                     count += 1
     
+    print(f"\nTotal XMAS patterns found: {count}")
     return count
 
 def solve_part2(input_data):
