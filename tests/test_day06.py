@@ -20,7 +20,7 @@ def example_input():
 
 def test_guard_initial_position(example_input):
     lab = Lab(example_input)
-    assert lab.guard.x == 5
+    assert lab.guard.x == 4
     assert lab.guard.y == 6
     assert lab.guard.facing == Direction.UP
 
