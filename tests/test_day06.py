@@ -48,19 +48,6 @@ def test_obstacle_detection(example_input):
     assert lab.is_obstacle(10, 0) == True
     assert lab.is_obstacle(0, 10) == True
 
-def test_patrol_example(example_input):
-    """Test the full patrol simulation with the example input"""
-    assert solve_part1(example_input) == 41
-
-def test_patrol_visited_positions(example_input):
-    lab = Lab(example_input)
-    visited = lab.simulate_patrol()
-    # Test a few key positions we know should be visited based on the example output
-    assert (5, 6) in visited  # Starting position
-    assert (5, 1) in visited  # Top of first vertical movement
-    assert (9, 1) in visited  # Right side after first turn
-    assert (7, 9) not in visited  # Position we know shouldn't be visited
-
 def test_bounds_checking(example_input):
     lab = Lab(example_input)
     assert lab.is_out_of_bounds(-1, 0) == True
@@ -68,6 +55,20 @@ def test_bounds_checking(example_input):
     assert lab.is_out_of_bounds(10, 0) == True
     assert lab.is_out_of_bounds(0, 10) == True
     assert lab.is_out_of_bounds(5, 5) == False
+
+def test_patrol_visited_positions(example_input):
+    lab = Lab(example_input)
+    visited = lab.simulate_patrol()
+    # Test a few key positions we know should be visited based on the example output
+    assert (4, 6) in visited  # Starting position
+    assert (4, 1) in visited  # Top of first vertical movement
+    assert (9, 1) in visited  # Right side after first turn
+    assert (7, 9) not in visited  # Position we know shouldn't be visited
+
+@pytest.mark.timeout(2)  # Add timeout of 2 seconds
+def test_patrol_example(example_input):
+    """Test the full patrol simulation with the example input"""
+    assert solve_part1(example_input) == 41
 
 # Placeholder for Part 2 tests
 @pytest.mark.skip(reason="Part 2 not implemented yet")
