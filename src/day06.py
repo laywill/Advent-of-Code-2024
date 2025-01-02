@@ -99,7 +99,7 @@ class Lab:
         visited = {self.guard.get_position()}
         steps = 0
         
-        while True:
+        while not self.is_out_of_bounds(self.guard.x, self.guard.y):
             self.check_timeout()
             steps += 1
             logger.debug(f"Step {steps}: Guard at {self.guard.get_position()} facing {self.guard.facing}")
@@ -117,12 +117,6 @@ class Lab:
                 # Move forward
                 self.guard.move()
                 pos = self.guard.get_position()
-                
-                # If guard left the mapped area
-                if self.is_out_of_bounds(*pos):
-                    logger.info(f"Guard left mapped area at position {pos} after {steps} steps")
-                    break
-                    
                 visited.add(pos)
                 logger.debug(f"Added position {pos} to visited set. Total visited: {len(visited)}")
         
