@@ -65,6 +65,17 @@ def test_patrol_visited_positions(example_input):
     assert (9, 1) in visited  # Right side after first turn
     assert (7, 9) not in visited  # Position we know shouldn't be visited
 
+def test_smaller_example():
+    """Test with a smaller, simpler example"""
+    small_input = [
+        "..#..",
+        "....#",
+        "..^..",
+        "#....",
+        "...#."
+    ]
+    assert solve_part1(small_input) == 10
+
 @pytest.mark.timeout(2)  # Add timeout of 2 seconds
 def test_patrol_example(example_input):
     """Test the full patrol simulation with the example input"""
